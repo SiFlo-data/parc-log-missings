@@ -486,7 +486,7 @@ function handleFile(e) {
 
       if (!isNaN(lat) && !isNaN(lon)) {
         // Crée une étiquette personnalisée
-          const isHighAsset = !isNaN(assetNumber) && Number(assetNumber) > 3991;
+          const isHighAsset = !isNaN(assetNumber) && Number(assetNumber) > 4023;
           const backgroundColor = isHighAsset ? 'rgba(0, 128, 0, 0.39)' : 'rgba(255, 255, 255, 0.07)'; // vert ou blanc semi-transparent
 
           const labelIcon = L.divIcon({
