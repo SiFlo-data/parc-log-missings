@@ -7,6 +7,50 @@ L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
   attribution: '© Google'
 }).addTo(map);
 
+// Groupe de couches pour la frontière des régions françaises
+let regionsBorderLayer = L.layerGroup().addTo(map);
+
+// Fonction pour charger la frontière des régions françaises
+function loadRegionsBorder() {
+  const regionsGeoJsonUrl = './regions.geojson'; // Chemin vers le fichier local
+  fetch(regionsGeoJsonUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      const regionsBorder = L.geoJSON(data, {
+        style: {
+          color: '#FFFFFF', // Bleu pour la frontière
+          weight: 3, // Épaisseur de la ligne
+          opacity: 0.9,
+          fillOpacity: 0 // Pas de remplissage
+        },
+        onEachFeature: (feature, layer) => {
+          // Ajoute une popup avec le nom de la région si disponible
+          if (feature.properties && feature.properties.nom) {
+            layer.bindPopup(`<strong>Région: ${feature.properties.nom}</strong>`);
+          } else {
+            layer.bindPopup('<strong>Frontière de région</strong>');
+          }
+        }
+      });
+      regionsBorderLayer.addLayer(regionsBorder);
+      console.log('Frontières des régions françaises chargées avec succès');
+    })
+    .catch(error => {
+      console.error('Erreur lors du chargement des frontières des régions:', error.message);
+      alert('Impossible de charger les frontières des régions. Vérifiez la console pour plus de détails.');
+    });
+}
+
+// Charge la frontière au démarrage
+setTimeout(() => {
+  loadRegionsBorder();
+}, 2000);
+
 // Variable pour stocker le marqueur temporaire des coordonnées
 let tempMarker = null;
 
